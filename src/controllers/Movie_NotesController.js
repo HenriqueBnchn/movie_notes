@@ -24,6 +24,11 @@ class Movie_NotesController {
     return res.status(200).json()
   }
 
+  async delete(req, res) {
+    const { id } = req.params
+
+    await knex("movie_notes").where({ id }).delete()
+  }
 
 }
 

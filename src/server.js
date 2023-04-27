@@ -1,5 +1,6 @@
-const express = require('express')
+require("express-async-errors")
 const AppError = require("./utils/AppError")
+const express = require('express')
 const routes = require("./routes");
 
 const app = express()
@@ -8,16 +9,6 @@ const PORT = 3334
 app.use(express.json())
 app.use(routes)
 
-
-
-app.get("/", (req, res) => {
-  res.send("hello world")
-})
-
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
 
 app.use((err, req, res, next) => {
   if(err instanceof AppError){
@@ -31,4 +22,10 @@ app.use((err, req, res, next) => {
     status: "error",
     message: "Internal Server Error"
   })
+})
+
+
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
