@@ -34,12 +34,12 @@ class UsersController {
     }
 
     const userWithUpdatedEmail = await knex.select('*').from('users').where('email', email)
-    
+
     if (userWithUpdatedEmail != "" && userWithUpdatedEmail[0].id !== user[0].id) {
       throw new AppError("This email is already in use")
     }
 
-    
+
     if (password && !old_password) {
       throw new AppError("You need to inform your old password")
     }
@@ -60,12 +60,17 @@ class UsersController {
     user[0].email = email ?? user[0].email
     user[0].password = hashedPass
 
+    try {
+      await knex("users").where("id", id).update({
+        name: user[0].name,
+        email: user[0].email,
+        password: user[0].password,
+        updated_at: knex.fn.now()
+      })
+    } catch (error) {
+      console.log(error)
+    }
 
-    await knex("users").where("id", id).update({
-      name: user[0].name,
-      email: user[0].email,
-      password: user[0].password
-    })
 
     return res.status(200).json()
   }
